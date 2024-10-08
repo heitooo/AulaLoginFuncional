@@ -1,6 +1,8 @@
 package br.com.Views;
 
 import br.com.DAO.ConexaoDAO;
+import br.com.DAO.UsuarioDAO;
+import br.com.DTO.UsuarioDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,7 +44,7 @@ public class TelaUsuario extends javax.swing.JFrame {
         txtNomeUsuario.setText("");
         txtLoginUsu.setText("");
         txtSenhaUsu.setText("");
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -59,6 +61,7 @@ public class TelaUsuario extends javax.swing.JFrame {
         txtLoginUsu = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        btnInserir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela Usuarios");
@@ -92,6 +95,13 @@ public class TelaUsuario extends javax.swing.JFrame {
 
         jLabel4.setText("Login");
 
+        btnInserir.setText("Inserir");
+        btnInserir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInserirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -113,10 +123,15 @@ public class TelaUsuario extends javax.swing.JFrame {
                     .addComponent(txtLoginUsu))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(jButton1)
-                .addGap(59, 59, 59)
-                .addComponent(jButton2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(jButton1)
+                        .addGap(59, 59, 59)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(btnInserir)))
                 .addContainerGap(110, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -142,7 +157,9 @@ public class TelaUsuario extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(63, 63, 63))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnInserir)
+                .addGap(29, 29, 29))
         );
 
         pack();
@@ -161,6 +178,46 @@ public class TelaUsuario extends javax.swing.JFrame {
     private void txtLoginUsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLoginUsuActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLoginUsuActionPerformed
+
+    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
+       if (txtIdUsuario.getText().isEmpty()) {
+        JOptionPane.showMessageDialog(null, "O ID do usuário não pode estar vazio.");
+        return; // Sai do método
+    }
+
+    int id_usuario;
+    try {
+        id_usuario = Integer.parseInt(txtIdUsuario.getText());
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Por favor, insira um número válido para o ID do usuário.");
+        return; // Sai do método
+    }
+
+    // Coleta os demais dados
+    String nome_usuario = txtNomeUsuario.getText();
+    String login_usuario = txtLoginUsu.getText();
+    String senha_usuario = txtSenhaUsu.getText();
+
+    // Cria o objeto DTO
+    UsuarioDTO objUsuarioDTO = new UsuarioDTO();
+    objUsuarioDTO.setId_usuario(id_usuario);
+    objUsuarioDTO.setNomeUsuario(nome_usuario);
+    objUsuarioDTO.setLoginUsuario(login_usuario);
+    objUsuarioDTO.setSenhaUsuario(senha_usuario);
+
+    // Insere o usuário no banco de dados
+    UsuarioDAO objUsuarioDAO = new UsuarioDAO();
+    boolean inseridoComSucesso = objUsuarioDAO.inserirUsuario(objUsuarioDTO);
+
+    if (inseridoComSucesso) {
+        JOptionPane.showMessageDialog(null, "Usuário inserido com sucesso!");
+        limpar(); // Limpa os campos após a inserção
+    } else {
+        JOptionPane.showMessageDialog(null, "Erro ao inserir usuário.");
+    }
+
+
+    }//GEN-LAST:event_btnInserirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,6 +255,7 @@ public class TelaUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnInserir;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
