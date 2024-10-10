@@ -25,11 +25,50 @@ public class UsuarioDAO {
             pst.close();
             return true;
 
-
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, " Inserir Usuário " + e);
             return false;
         }
     }
+
+    public void editar(UsuarioDTO objDTO) {
+        String sql = "update tbusuario set usuario = ?, login = ?, senha = ? where id_usu = ?";
+        conexao = ConexaoDAO.conector();
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(4, objDTO.getId_usuario());
+            pst.setString(1, objDTO.getNomeUsuario());
+            pst.setString(2, objDTO.getLoginUsuario());
+            pst.setString(3, objDTO.getSenhaUsuario());
+
+            int add = pst.executeUpdate();
+            if (add > 0) {
+                conexao.close();
+                JOptionPane.showMessageDialog(null, "Usuário editado com sucesso.");
+
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, " Método editar " + e);
+        }
+    }
+
+    public void apagar(UsuarioDTO objDTO) {
+        String sql = "delete from tbusuario where id_usuario = ?";
+        conexao = ConexaoDAO.conector();
+
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setInt(1, objDTO.getId_usuario());
+            int add = pst.executeUpdate();
+            if (add > 0) {
+                conexao.close();
+                JOptionPane.showMessageDialog(null, "Usuário excluído com sucesso.");
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Método apagar " + e);
+        }
+    }
+
 }

@@ -18,6 +18,39 @@ public class TelaUsuario extends javax.swing.JFrame {
         initComponents();
         conexao = ConexaoDAO.conector();
     }
+   
+    public void inserir(){
+    int id_usuario;
+        id_usuario = Integer.parseInt(txtIdUsuario.getText());
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+     
+        String nome_usuario = txtNomeUsuario.getText();
+        String login_usuario = txtLoginUsu.getText();
+        String senha_usuario = txtSenhaUsu.getText();
+        UsuarioDTO objUsuarioDTO = new UsuarioDTO();
+        objUsuarioDTO.setId_usuario(id_usuario);
+        objUsuarioDTO.setNomeUsuario(nome_usuario);
+        objUsuarioDTO.setLoginUsuario(login_usuario);
+        objUsuarioDTO.setSenhaUsuario(senha_usuario);
+
+       
+        UsuarioDAO objUsuarioDAO = new UsuarioDAO();
+        boolean inseridoComSucesso = objUsuarioDAO.inserirUsuario(objUsuarioDTO);
+
+        if (inseridoComSucesso) {
+            JOptionPane.showMessageDialog(null, "Usuário inserido com sucesso!");
+            limpar();
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao inserir usuário.");
+        }
+       
+        txtNomeUsuario.setText("");
+        txtIdUsuario.setText("");
+        txtLoginUsu.setText("");
+        txtSenhaUsu.setText("");
+    }
+    
+    
 
     public void pesquisa() {
         String sql = "select * from tbUsuario where id_usu = ?";
@@ -39,7 +72,7 @@ public class TelaUsuario extends javax.swing.JFrame {
         }
     }
 
-    private void limpar() {
+    public void limpar() {
         txtIdUsuario.setText("");
         txtNomeUsuario.setText("");
         txtLoginUsu.setText("");
@@ -61,7 +94,9 @@ public class TelaUsuario extends javax.swing.JFrame {
         txtLoginUsu = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        btnInserir = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnInserir1 = new javax.swing.JButton();
+        btnDeletar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Tela Usuarios");
@@ -95,10 +130,24 @@ public class TelaUsuario extends javax.swing.JFrame {
 
         jLabel4.setText("Login");
 
-        btnInserir.setText("Inserir");
-        btnInserir.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnInserirActionPerformed(evt);
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnInserir1.setText("Inserir");
+        btnInserir1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInserir1ActionPerformed(evt);
+            }
+        });
+
+        btnDeletar.setText("Deletar");
+        btnDeletar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarActionPerformed(evt);
             }
         });
 
@@ -122,17 +171,21 @@ public class TelaUsuario extends javax.swing.JFrame {
                     .addComponent(txtSenhaUsu, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
                     .addComponent(txtLoginUsu))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(58, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnInserir1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
-                        .addGap(59, 59, 59)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addComponent(btnInserir)))
-                .addContainerGap(110, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDeletar)
+                        .addGap(54, 54, 54))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(144, 144, 144))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,13 +206,15 @@ public class TelaUsuario extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSenhaUsu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnInserir1)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnInserir)
-                .addGap(29, 29, 29))
+                    .addComponent(btnEditar)
+                    .addComponent(btnDeletar))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addGap(21, 21, 21))
         );
 
         pack();
@@ -179,45 +234,38 @@ public class TelaUsuario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLoginUsuActionPerformed
 
-    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
-       if (txtIdUsuario.getText().isEmpty()) {
-        JOptionPane.showMessageDialog(null, "O ID do usuário não pode estar vazio.");
-        return; // Sai do método
-    }
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        String id_usuario = txtIdUsuario.getText();
+        String nomeUsuario = txtNomeUsuario.getText();
+        String loginUsuario = txtLoginUsu.getText();
+        String senhaUsuario = txtSenhaUsu.getText();
+        
+        UsuarioDTO objDTO = new UsuarioDTO();
+        objDTO.setId_usuario(Integer.parseInt(id_usuario));
+        objDTO.setNomeUsuario(nomeUsuario);
+        objDTO.setLoginUsuario(loginUsuario);
+        objDTO.setSenhaUsuario(senhaUsuario);
+      
+        UsuarioDAO objUsuarioDAO = new UsuarioDAO();
+        objUsuarioDAO.editar(objDTO);
 
-    int id_usuario;
-    try {
-        id_usuario = Integer.parseInt(txtIdUsuario.getText());
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(null, "Por favor, insira um número válido para o ID do usuário.");
-        return; // Sai do método
-    }
+    }//GEN-LAST:event_btnEditarActionPerformed
 
-    // Coleta os demais dados
-    String nome_usuario = txtNomeUsuario.getText();
-    String login_usuario = txtLoginUsu.getText();
-    String senha_usuario = txtSenhaUsu.getText();
+    private void btnInserir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserir1ActionPerformed
+       //chamada do metodo inserir.
+        inserir();
+    }//GEN-LAST:event_btnInserir1ActionPerformed
 
-    // Cria o objeto DTO
-    UsuarioDTO objUsuarioDTO = new UsuarioDTO();
-    objUsuarioDTO.setId_usuario(id_usuario);
-    objUsuarioDTO.setNomeUsuario(nome_usuario);
-    objUsuarioDTO.setLoginUsuario(login_usuario);
-    objUsuarioDTO.setSenhaUsuario(senha_usuario);
-
-    // Insere o usuário no banco de dados
-    UsuarioDAO objUsuarioDAO = new UsuarioDAO();
-    boolean inseridoComSucesso = objUsuarioDAO.inserirUsuario(objUsuarioDTO);
-
-    if (inseridoComSucesso) {
-        JOptionPane.showMessageDialog(null, "Usuário inserido com sucesso!");
-        limpar(); // Limpa os campos após a inserção
-    } else {
-        JOptionPane.showMessageDialog(null, "Erro ao inserir usuário.");
-    }
-
-
-    }//GEN-LAST:event_btnInserirActionPerformed
+    private void btnDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarActionPerformed
+        String id_usuario = txtIdUsuario.getText();
+        
+        UsuarioDTO objDTO = new UsuarioDTO();
+        objDTO.setId_usuario(Integer.parseInt(id_usuario));
+        
+        UsuarioDAO objUsuarioDAO = new UsuarioDAO();
+        objUsuarioDAO.apagar(objDTO);
+        
+    }//GEN-LAST:event_btnDeletarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -233,16 +281,24 @@ public class TelaUsuario extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaUsuario.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -255,14 +311,16 @@ public class TelaUsuario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnInserir;
+    private javax.swing.JButton btnDeletar;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnInserir1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField txtIdUsuario;
+    public static javax.swing.JTextField txtIdUsuario;
     private javax.swing.JTextField txtLoginUsu;
     private javax.swing.JTextField txtNomeUsuario;
     private javax.swing.JTextField txtSenhaUsu;
